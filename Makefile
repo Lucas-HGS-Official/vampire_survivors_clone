@@ -1,7 +1,11 @@
 TARGET = bin/game
+WEB_TARGET = bin/game.html
 SRC = $(wildcard code/src/*.cpp)
 OBJ = $(patsubst code/src/%.cpp, code/obj/%.o, $(SRC))
-WEB_RAYLIB = code/libs/static_libs/web
+WEB_LIBS = code/libs/static_libs/web
+
+LIB_SRC = $(wildcard code/libs/src/*.c)
+LIB_OBJ = $(patsubst code/libs/src/%.c, code/libs/obj/%.o, $(LIB_SRC))
 
 ###################################
 # Build Everything
@@ -37,9 +41,7 @@ activate_emcc:
 	~/emsdk/emsdk activate latest
 
 web_build:
-	emcc -o $(TARGET).html code/src/Main.cpp code/src/Game.cpp -Os -Wall ./$(WEB_RAYLIB)/libraylib.a -Icode/include -Icode/libs/include -I/home/lhgs/raylib/src -L$(WEB_RAYLIB) -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s STACK_SIZE=20MB -s ASSERTIONS=1 -s EXPORTED_RUNTIME_METHODS=ccall --profiling -DPLATFORM_WEB
-# --preload-file resources
-
+	emcc -o $(WEB_TARGET) $(SRC) -Os -Wall ./$(WEB_LIBS)/libraylib.a -Icode/include -Icode/libs/include -I/home/lhgs/raylib/src -L$(WEB_LIBS) -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s STACK_SIZE=20MB -s ASSERTIONS=1 -s EXPORTED_RUNTIME_METHODS=ccall --profiling --preload-file resources -DPLATFORM_WEB
 ###################################
 
 ###################################
